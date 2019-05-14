@@ -15,13 +15,13 @@ namespace Wiki_UnitTest.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        UserBLL userBll;
+        IUserBLL userBll;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="bll"></param>
-        public UserController(UserBLL bll)
+        public UserController(IUserBLL bll)
         {
             userBll = bll;
         }

@@ -33,7 +33,10 @@ namespace Wiki_UnitTest.Common
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseMySQL(dbConnection);
+            if (!string.IsNullOrEmpty(dbConnection))
+            {
+                optionsBuilder.UseMySQL(dbConnection);
+            }
 
             base.OnConfiguring(optionsBuilder);
         }

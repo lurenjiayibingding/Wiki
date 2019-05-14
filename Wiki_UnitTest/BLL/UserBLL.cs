@@ -10,7 +10,7 @@ namespace Wiki_UnitTest.BLL
     /// <summary>
     /// 
     /// </summary>
-    public class UserBLL
+    public class UserBLL : IUserBLL
     {
         MariaDbContext dbContext;
 
@@ -28,7 +28,7 @@ namespace Wiki_UnitTest.BLL
         /// </summary>
         /// <param name="userName"></param>
         /// <returns></returns>
-        public bool AddUser(string userName)
+        public virtual bool AddUser(string userName)
         {
             var userModel = new WUserInfoModel
             {
