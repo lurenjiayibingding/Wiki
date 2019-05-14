@@ -27,17 +27,21 @@ namespace WikiUnitTest_Test
         public void AddUserTest()
         {
             Mock<MariaDbContext> mockDbContext = new Mock<MariaDbContext>(new object[] { "Data Source=118.24.80.186;Port=3306;Database=WeChat; User ID=root; Password=1qazXSW@;Charset=utf8" });
-            var mockUserInfoModel = new Mock<DbSet<WUserInfoModel>>().Object;
-            mockUserInfoModel.Add(new WUserInfoModel
+            var mockUserInfoModel = new Mock<DbSet<WUserInfoModel>>();
+            mockUserInfoModel.Object.Add(new WUserInfoModel
             {
                 Id = Guid.NewGuid().ToString(),
                 UserName = "111",
             });
 
+
+
             //var aaa = mockUserInfoModel.Count();
 
-            mockDbContext.Setup(n => n.UserInfoModels).Returns(mockUserInfoModel);
+            mockDbContext.Setup(n => n.UserInfoModels).Returns(mockUserInfoModel.Object);
             userBll = new UserBLL(mockDbContext.Object);
+
+            mockDbContext.Setup(n => n.SaveChanges()).Returns(1);
 
             //Assert.IsTrue(mockUserInfoModel.Count() == 0);
             var result = userBll.AddUser("武当王也");
