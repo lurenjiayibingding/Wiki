@@ -7,7 +7,7 @@ using Wiki_UnitTest.BLL;
 namespace WikiUnitTest_Test
 {
     [TestClass]
-    public class FastSortTest
+    public class InsertSortTest
     {
         [TestMethod]
         public void FastSortTest1()
