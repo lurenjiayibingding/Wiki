@@ -20,8 +20,4 @@
     <ProjectReference Include="..\Wiki_UnitTest\Wiki_UnitTest.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Class\" />
-  </ItemGroup>
-
 </Project>
