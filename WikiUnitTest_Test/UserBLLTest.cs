@@ -9,6 +9,7 @@ using Wiki_UnitTest.Common;
 using Wiki_UnitTest.Mold.DBModel;
 using System.Linq;
 using System.Linq.Expressions;
+using WikiUnitTest_Test.Class;
 
 namespace WikiUnitTest_Test
 {
@@ -26,20 +27,31 @@ namespace WikiUnitTest_Test
         }
 
         [TestMethod]
-        public void AddUserTest()
+        public void AddUserTest1()
         {
             var mockUserInfoModel = new Mock<DbSet<WUserInfoModel>>();
             mockDbContext.Setup(n => n.UserInfoModels).Returns(mockUserInfoModel.Object);
             mockDbContext.Setup(n => n.SaveChanges()).Returns(1);
-            var result = userBll.AddUser("武当王也");
+            var result = userBll.AddUser("曾小贤");
             Assert.IsTrue(result);
         }
 
+        [TestMethod]
+        public void AddUserTest2()
+        {
+            var mockUserInfoModel = new Mock<DbSet<WUserInfoModel>>();
+            mockUserInfoModel.SetupArray(new WUserInfoModel[0]);
+            mockDbContext.Setup(n => n.UserInfoModels).Returns(mockUserInfoModel.Object);
+            mockDbContext.Setup(n => n.SaveChanges()).Returns(1);
+            var result = userBll.AddUser("曾小贤");
+            Assert.IsTrue(mockUserInfoModel.Object.Count() == 1);
+        }
+
         /// <summary>
-        /// 
+        /// 错误的单元测试用例
         /// </summary>
         [TestMethod]
-        public void GetUserNameTest()
+        public void GetUserNameTest1()
         {
             var id = Guid.NewGuid();
             var name = Guid.NewGuid().ToString();
@@ -48,18 +60,36 @@ namespace WikiUnitTest_Test
                 Id = id.ToString(),
                 UserName = "name",
             };
-            var list = new List<WUserInfoModel> { userInfoModel };
 
-            var mockUserInfoModel = new Mock<DbSet<WUserInfoModel>>();
-            mockUserInfoModel.Object.Add(new WUserInfoModel
+            //DbSet<T>是抽象类不能直接实例化
+            //mockDbContext.Setup(n => n.UserInfoModels).Returns(new DbSet<WUserInfoModel>());
+
+            //报错::“The method or operation is not implemented.”
+            Mock<DbSet<WUserInfoModel>> mockDbSet = new Mock<DbSet<WUserInfoModel>>();
+            mockDbSet.Object.Add(userInfoModel);
+            mockDbContext.Setup(n => n.UserInfoModels).Returns(mockDbSet.Object);
+
+            Assert.IsTrue(userBll.GetUserName(id) == name);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [TestMethod]
+        public void GetUserNameTest2()
+        {
+            var id = Guid.NewGuid();
+            var name = Guid.NewGuid().ToString();
+            var userInfoModel = new WUserInfoModel
             {
-                Id = Guid.NewGuid().ToString(),
-                UserName = "111",
-            });
-            //mockUserInfoModel.Setup(n => n.Where(It.IsAny<Expression<Func<WUserInfoModel, bool>>>())).Returns(null);
+                Id = id.ToString(),
+                UserName = name,
+            };
 
-            //mockDbContext.Setup(n => n.UserInfoModels.Where(It.IsAny<Expression<Func<WUserInfoModel, bool>>>())).Returns(mockUserInfoModel.Object);
-            mockDbContext.Setup(n => n.UserInfoModels).Returns(mockUserInfoModel.Object);
+            Mock<DbSet<WUserInfoModel>> mockDbSet = new Mock<DbSet<WUserInfoModel>>();
+            mockDbSet.SetupArray(new WUserInfoModel[] { userInfoModel });
+            mockDbContext.Setup(n => n.UserInfoModels).Returns(mockDbSet.Object);
+
             Assert.IsTrue(userBll.GetUserName(id) == name);
         }
     }
